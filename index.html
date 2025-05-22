@@ -1,0 +1,185 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pirro Thomo - Architectural Heritage</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    section {
+      margin-bottom: 4rem;
+    }
+    ol {
+      padding-left: 2rem;
+    }
+    li {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .highlight {
+      font-weight: 600;
+      color: #1e40af;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-blue-800 text-white py-10">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <img src="pirro-thomo.png" alt="Pirro Thomo" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+      <h1 class="text-5xl font-bold">Pirro Thomo</h1>
+      <p class="mt-3 text-xl">Architect, Scholar, and Cultural Heritage Preservationist</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-6 py-10">
+    <!-- Scholarly Works -->
+    <section>
+      <h2 class="text-3xl font-semibold text-blue-800 mb-6">Scholarly Works and Publications</h2>
+      <ol class="text-gray-700">
+        <li>Studies on the identification, evaluation, and protection of cultural monuments (<span class="highlight">urban and rural dwellings, ensembles, historical centers, Byzantine and post-Byzantine churches</span>)</li>
+        <li>Chapters “<span class="highlight">Architecture of Ancient Greece</span>” and “<span class="highlight">Byzantine Architecture</span>” in the university textbook <i>History of Architecture</i>, <span class="highlight">1973</span></li>
+        <li><i><span class="highlight">History of Architecture in Albania</span></i> (co-author), <span class="highlight">1979</span></li>
+        <li><i><span class="highlight">Rural Dwellings of Northern Albania</span></i>, <span class="highlight">1981</span></li>
+        <li><i><span class="highlight">Korça, Urban Planning and Architecture</span></i>, <span class="highlight">1988</span></li>
+        <li>Monograph “<span class="highlight">Albanie</span>” in the volume <i>Traditional Architecture of Balkan Countries</i>, <span class="highlight">Athens, 1990</span> (co-author)</li>
+        <li>Editor-in-chief of the corpus <i><span class="highlight">Albanian Popular Settlements and Dwellings</span></i>, Vol. I, <span class="highlight">Tirana, 2004</span></li>
+        <li><i><span class="highlight">Post-Byzantine Churches in Southern Albania</span></i>, <span class="highlight">1998</span></li>
+        <li>Scientific editor of the proceedings of the International Symposium “<span class="highlight">2000 Years of Church Art and Culture in Albania</span>”, <span class="highlight">Tirana, 2003</span></li>
+        <li><i><span class="highlight">Restoration of Orthodox Church Monuments in Albania</span></i>, <span class="highlight">Tirana, 2005</span></li>
+        <li><i><span class="highlight">Multilingual Illustrated Dictionary of Byzantine Architecture and Sculpture Terminology</span></i>, <span class="highlight">Crete University Press, Herakleion, 2010</span></li>
+        <li><i><span class="highlight">Korça, Urban Planning and Architecture</span></i>, <span class="highlight">2012</span> (3rd improved edition)</li>
+        <li><i><span class="highlight">History of Architecture in Albania</span></i> (co-author), <span class="highlight">2016</span> (2nd improved edition)</li>
+        <li><i><span class="highlight">Collection of Studies and Presentations</span></i>, <span class="highlight">Tirana, 2020</span></li>
+        <li><i><span class="highlight">Settlements and Rural Dwellings in Northern Albania</span></i>, <span class="highlight">Tirana, 2021</span> (2nd improved edition)</li>
+        <li><i><span class="highlight">Post-Byzantine Churches in Albania</span></i>, <span class="highlight">Tirana, 2023</span> (2nd improved edition)</li>
+        <li><i><span class="highlight">Monument Evaluation Practices</span></i>, <span class="highlight">Tirana, 2024</span></li>
+        <li>Over <span class="highlight">60 articles</span> published in scientific journals in <span class="highlight">Albania and abroad</span> on popular architecture, Byzantine and post-Byzantine architecture, restoration, etc.</li>
+        <li>Study on the state protection of the <span class="highlight">Historical Center of Korça</span>, <span class="highlight">2006-2007</span></li>
+        <li>Study on the state protection of the <span class="highlight">Historical Center of Pogradec</span>, <span class="highlight">2007</span></li>
+        <li>Study on the state protection of the <span class="highlight">Old Bazaar of Bilisht</span>, <span class="highlight">2007</span></li>
+        <li>Study on the state protection of the <span class="highlight">Historical Center of Himara</span>, <span class="highlight">2012</span></li>
+        <li>Surveys, studies, and proposals for the state protection of <span class="highlight">Byzantine, post-Byzantine, and traditional architecture monuments</span></li>
+      </ol>
+    </section>
+
+    <!-- Symposium Participations -->
+    <section>
+      <h2 class="text-3xl font-semibold text-blue-800 mb-6">Symposium Participations</h2>
+      <p class="text-gray-700 mb-4">Presented scientific papers at numerous national and international symposia, including:</p>
+      <ol class="text-gray-700">
+        <li><span class="highlight">ICOMOS Symposium</span> “On the Revitalization of Historical Centers and Typology of Popular Architecture”, <span class="highlight">Thessaloniki-Kastoria, Greece</span>, <span class="highlight">October 3-10, 1973</span></li>
+        <li>Symposium “<span class="highlight">Albanien</span>” with emphasis on folklore, history, and social history, <span class="highlight">Kittsee, Austria</span>, <span class="highlight">November 22-23, 1984</span></li>
+        <li>Symposium “<span class="highlight">Kastoria, the City, Lake, and Monuments</span>”, <span class="highlight">Kastoria, Greece</span>, <span class="highlight">September 27-October 2, 1987</span></li>
+        <li><span class="highlight">University of Minnesota</span>, “An Unknown Territory: The Art and Architecture of Albania in a Balkan Context”, <span class="highlight">Minneapolis, USA</span>, <span class="highlight">April 14-17, 1994</span></li>
+        <li><span class="highlight">AIESEE</span>, Seventh International Congress of Southeast European Studies, <span class="highlight">Thessaloniki, Greece</span>, <span class="highlight">August 29-September 4, 1994</span></li>
+        <li><span class="highlight">Australian Institute of Macedonian Studies</span>, Third International Conference “Byzantine Macedonia”, <span class="highlight">Melbourne, Australia</span>, <span class="highlight">July 10-15, 1995</span></li>
+        <li>Symposium “<span class="highlight">Architectural Interventions in Historical City Centers</span>”, <span class="highlight">Veria, Greece</span>, <span class="highlight">September 2-3, 1995</span></li>
+        <li><span class="highlight">French Institute of Anatolian Studies</span>, Istanbul Technical University, “The Ottoman House: Origin, Typology, and Distribution”, <span class="highlight">Istanbul, Turkey</span>, <span class="highlight">April 19-20, 1996</span></li>
+        <li><span class="highlight">Institute of Macedonian Studies</span>, Symposium “Voskopoja”, <span class="highlight">Thessaloniki, Greece</span>, <span class="highlight">October 31-November 1, 1997</span></li>
+        <li>Symposium “<span class="highlight">Wood in Construction: New and Old Technologies</span>”, <span class="highlight">Thessaloniki, Greece</span>, <span class="highlight">February 27-28, 1997</span></li>
+        <li>Symposium “<span class="highlight">Traditional Balkan Architecture</span>”, <span class="highlight">Thessaloniki, Greece</span>, <span class="highlight">November 7-10, 1997</span></li>
+        <li>Eleventh Symposium of History and Art “<span class="highlight">Relations and Transport in the Pre-Industrial Period</span>”, <span class="highlight">Monemvasia, Greece</span>, <span class="highlight">July 23-26, 1998</span></li>
+        <li>Third Scientific Meeting, <span class="highlight">Drama, Greece</span>, <span class="highlight">1998</span></li>
+        <li><span class="highlight">TEE Symposium</span> “Restoration and Reuse of Historical Buildings and Cities from the 18th-20th Centuries”, <span class="highlight">Thessaloniki, Greece</span>, <span class="highlight">1999</span></li>
+        <li>International Symposium “<span class="highlight">2000 Years of Church Art and Culture in Albania</span>”, <span class="highlight">Tirana, Albania</span>, <span class="highlight">November 16-18, 2000</span></li>
+        <li>Symposium “<span class="highlight">Restrained Interventions and Protection of Historical Buildings</span>”, <span class="highlight">Thessaloniki, Greece</span>, <span class="highlight">2000</span></li>
+        <li>International Conference “<span class="highlight">Education in Border Countries</span>”, <span class="highlight">Florina, Greece</span>, <span class="highlight">2012</span></li>
+        <li>Scientific Meeting “<span class="highlight">Revitalization of Cultural Heritage: Potentials and Challenges</span>”, <span class="highlight">Tirana, Albania</span>, <span class="highlight">2014</span></li>
+        <li>International Symposium “<span class="highlight">Culture and Space in the Balkans</span>”, <span class="highlight">Thessaloniki, Greece</span>, <span class="highlight">2014</span></li>
+        <li>International Scientific Conference “<span class="highlight">50 Years of Study and Restoration of Albanian Cultural Heritage</span>”, <span class="highlight">Tirana, Albania</span>, <span class="highlight">October 22-23, 2015</span></li>
+        <li>Lectures on <span class="highlight">Popular Architecture and Criteria for Protection and Restoration in Albania</span>, <span class="highlight">Helsinki, Finland, 1986</span>, and <span class="highlight">Marburg, Germany, 1988</span></li>
+      </ol>
+    </section>
+
+    <!-- Restoration Projects -->
+    <section>
+      <h2 class="text-3xl font-semibold text-blue-800 mb-6">Restoration and Supervisory Projects</h2>
+      <ol class="text-gray-700">
+        <li>Over <span class="highlight">30 restoration projects</span> and implementations during <span class="highlight">1962-1991</span></li>
+        <li>Collaboration on <span class="highlight">14 restoration and consolidation projects</span> in the monasteries of <span class="highlight">Mount Athos, Greece</span> (Iviron, Stavronikita, Pantokrator)</li>
+        <li>Collaboration on the restoration and repurposing project of the <span class="highlight">protected Laladika zone</span> in <span class="highlight">Thessaloniki, Greece</span></li>
+        <li>Collaboration on the restoration project of the urban unit of the <span class="highlight">Metropolis</span> in <span class="highlight">Thessaloniki, Greece</span></li>
+        <li>Collaboration on the restoration project of the urban unit of <span class="highlight">Vlatadhon Monastery</span> in the protected <span class="highlight">Ano Poli zone</span>, <span class="highlight">Thessaloniki, Greece</span></li>
+        <li>Direction of restoration works and modification of the restoration project for <span class="highlight">Saint Panteleimon Church</span>, <span class="highlight">Thessaloniki, Greece</span> (awarded by <span class="highlight">Europa Nostra</span>)</li>
+        <li>Phase I restoration and consolidation project for <span class="highlight">Osios David Church</span>, <span class="highlight">Thessaloniki, Greece</span></li>
+        <li>Restoration and consolidation project for <span class="highlight">Saint Zacharias Church</span> in <span class="highlight">Gramos, Kastoria, Greece</span></li>
+        <li>Restoration project and direction of works for the <span class="highlight">“Hortaxhi Tomb”</span> monument in the <span class="highlight">Rotunda, Thessaloniki, Greece</span></li>
+        <li>Restoration project for the cultural monument dwelling at <span class="highlight">14 Meleniku Street</span>, <span class="highlight">Thessaloniki, Greece</span></li>
+        <li>Restoration project for the cultural monument dwelling at <span class="highlight">48 Velisariou Street</span>, <span class="highlight">Thessaloniki, Greece</span></li>
+        <li>Restoration project for <span class="highlight">Hamza Bey Mosque</span>, <span class="highlight">Alkazar, Thessaloniki, Greece</span></li>
+        <li>Restoration project for <span class="highlight">Byzantine baths</span>, <span class="highlight">Langadha, Greece</span></li>
+        <li>Supervision of restoration works at <span class="highlight">Saint Kosmas Monastery Church</span> in <span class="highlight">Kolkondas, Fier, Albania</span></li>
+        <li>Restoration project and supervision of works at <span class="highlight">Saint Mary Church</span> in <span class="highlight">Leusa, Përmet, Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at the <span class="highlight">Dormition of Saint Mary Church</span> in <span class="highlight">Zervat, Gjirokastër, Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at the <span class="highlight">Taxiarches Church</span> in <span class="highlight">Bodrishta, Gjirokastër, Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at <span class="highlight">Saint George Monastery</span> in <span class="highlight">Çuka, Saranda, Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at the <span class="highlight">Cepo Monastery Church</span>, <span class="highlight">Gjirokastër, Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at <span class="highlight">Nivan Monastery Church</span>, <span class="highlight">Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at the guesthouses and <span class="highlight">Saint Kosmas chapel</span> in <span class="highlight">Saint Kosmas Monastery, Kolkondas, Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at <span class="highlight">Saint Mary Monastery</span> in <span class="highlight">Kakome, Saranda, Albania</span></li>
+        <li>Restoration and consolidation project and supervision of works at <span class="highlight">Saint Mary Church</span> in <span class="highlight">Koncka, Gjirokastër, Albania</span></li>
+        <li>Restoration project for phases I and II of the <span class="highlight">Durrës Amphitheater</span>, <span class="highlight">Albania</span></li>
+        <li>Consultant for the restoration project and supervision of works at the <span class="highlight">Old Bazaar of Korça</span>, <span class="highlight">Albania</span></li>
+        <li>Consultant for the study and project of revitalization of the tourist villages of <span class="highlight">Dhërmi and Vuno</span>, <span class="highlight">Albania</span></li>
+        <li>Restoration and consolidation project for <span class="highlight">Saint Prodromos Monastery</span> in <span class="highlight">Voskopoja, Albania</span></li>
+        <li>Restoration and consolidation project for <span class="highlight">Saint Friday Church</span> in <span class="highlight">Çeta, Kavaja, Albania</span></li>
+        <li>Modification of the project and implementation of restoration interventions at <span class="highlight">Saint Mary Church</span> in <span class="highlight">Labova e Kryqit, Gjirokastër, Albania</span></li>
+        <li>Modification of the project and implementation of restoration interventions at <span class="highlight">Saint Mary Church</span> in <span class="highlight">Peshkëpia e Sipërme, Gjirokastër, Albania</span></li>
+        <li>Modification of the project and implementation of restoration interventions at <span class="highlight">Saint Nicholas Monastery Church</span> in <span class="highlight">Mesopotam, Saranda, Albania</span></li>
+        <li>Project and implementation of works for the reconstruction of <span class="highlight">Tower C</span> of the surrounding walls of <span class="highlight">Durrës, Albania</span></li>
+      </ol>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-800 text-white py-6">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <p>© 2025 Pirro Thomo. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
